@@ -1,31 +1,36 @@
-/* global ngapp, xelib */
+/* global ngapp, xelib, registerPatcher, patcherUrl */
+
 registerPatcher({
     info: info,
     gameModes: [xelib.gmTES5, xelib.gmSSE],
     settings: {
         label: 'Load Screen Remover',
-        hide: true
+        templateUrl: `${patcherUrl}/partials/settings.html`,
+        controller: function($scope) {},
+        defaultSettings: {
+            showLore: false
+        }
     },
-    requiredFiles: [],
     getFilesToPatch: function(filenames) {
         return filenames;
     },
-    execute: {
+    execute: (patchFile, helpers, settings, locals) => ({
         process: [{
-            load: function(plugin, helpers, settings, locals) {
-                return {
-                    signature: 'LSCR',
-                    filter: function(record) {
-                        return true;
-                    }
+            load: {
+                signature: 'LSCR',
+                filter: function(record) {
+                    return true;
                 }
             },
-            patch: function(record, helpers, settings, locals) {
-                helpers.logMessage("Removing Loadscreen for " + xelib.LongName(record));
-                xelib.SetValue(record, 'DESC', ''); 
+            patch: function(record) {
+                helpers.logMessage(`Removing Loadscreen for ${xelib.LongName(record)}`);
+
+                if (!settings.showLore)
+                    xelib.SetValue(record, 'DESC', ''); 
+
                 xelib.SetValue(record, 'NNAM', '');
                 xelib.RemoveElement(record, 'SNAM');
             }
         }]
-    }
+    })
 });
