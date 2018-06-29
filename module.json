@@ -1,0 +1,12 @@
+{
+  "id": "zLoadScreenRemover",
+  "name": "Load Screen Remover",
+  "author": "Qudix",
+  "version": "1.0.0",
+  "released": "6/28/2018",
+  "updated": "6/28/2018",
+  "description": "Prevents all load screens from showing up.",
+  "requires": ["unifiedPatchingFramework"],
+  "moduleLoader": "UPF",
+  "canHotLoad": true
+}
