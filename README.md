@@ -1,1 +1,1 @@
-"# <Some useful info here>" 
+"# Some useful info here" 
