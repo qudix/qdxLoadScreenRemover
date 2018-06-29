@@ -1,1 +1,2 @@
-"# Some useful info here" 
+# loadScreenRemover
+As the name implies, it prevents load screens from displaying
