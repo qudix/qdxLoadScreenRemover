@@ -1,10 +1,10 @@
 {
-  "id": "loadScreenRemover",
+  "id": "qdxLoadScreenRemover",
   "name": "Load Screen Remover",
   "author": "Qudix",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "released": "6/28/2018",
-  "updated": "7/1/2018",
+  "updated": "12/16/2019",
   "description": "Prevents all load screens from showing up.",
   "requires": ["unifiedPatchingFramework"],
   "moduleLoader": "UPF",
