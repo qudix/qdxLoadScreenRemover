@@ -1,8 +1,6 @@
-/* global ngapp, xelib, registerPatcher, patcherUrl */
-
 registerPatcher({
     info: info,
-    gameModes: [xelib.gmTES5, xelib.gmSSE],
+    gameModes: [xelib.gmTES5, xelib.gmSSE, xelib.gmFO4],
     settings: {
         label: 'Load Screen Remover',
         templateUrl: `${patcherUrl}/partials/settings.html`,
@@ -14,7 +12,16 @@ registerPatcher({
     getFilesToPatch: function(filenames) {
         return filenames;
     },
-    execute: (patchFile, helpers, settings, locals) => ({
+    execute: (patch, helpers, settings, locals) => ({
+        initialize: () => {
+            locals = {
+                game: xelib.GetGlobal('AppName'),
+                removed: 0
+            }
+
+            locals.static = xelib.AddElement(patch, 'STAT\\STAT');
+            xelib.AddElementValue(locals.static, 'EDID', 'None');
+        },
         process: [{
             load: {
                 signature: 'LSCR',
@@ -23,14 +30,22 @@ registerPatcher({
                 }
             },
             patch: function(record) {
-                helpers.logMessage(`Removing Loadscreen for ${xelib.LongName(record)}`);
-
                 if (!settings.showLore)
                     xelib.SetValue(record, 'DESC', ''); 
 
-                xelib.SetValue(record, 'NNAM', '');
-                xelib.RemoveElement(record, 'SNAM');
+                xelib.SetLinksTo(record, locals.static, 'NNAM');
+
+                if (locals.game === 'FO4') {
+                    xelib.RemoveElement(record, 'TNAM');
+                    xelib.RemoveElement(record, 'Conditions');             
+                } else
+                    xelib.RemoveElement(record, 'SNAM');
+
+                locals.removed += 1;
             }
-        }]
+        }],
+        finalize: () => {
+            helpers.logMessage(`Removed ${locals.removed} loadscreens`);  
+        }
     })
 });
